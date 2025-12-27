@@ -1,0 +1,580 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyNotes – Study Smarter</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #0a0a0a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Page transition */
+    body.fade-out {
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 24px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    nav a:hover { color: #ffffff; }
+
+    main { padding-top: 70px; }
+
+    section.block {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 6vw;
+      opacity: 0;
+      transform: translateY(40px);
+      transition:
+        opacity 0.8s ease-out,
+        transform 0.8s ease-out;
+    }
+
+    section.block.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: 0.9;
+    }
+
+    .hero::before {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(45, 138, 138, 0.25), transparent);
+      top: -200px; right: -200px;
+      animation: float 10s ease-in-out infinite;
+    }
+
+    .hero::after {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(94, 179, 214, 0.25), transparent);
+      bottom: -150px; left: -150px;
+      animation: float 12s ease-in-out infinite;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(30px); }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 900;
+      margin-bottom: 20px;
+      line-height: 1.1;
+      letter-spacing: -2px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(90deg, #2d8a8a, #5eb3d6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%     { opacity: 0.7; }
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 40px;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 36px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2d8a8a, #5eb3d6);
+      color: white;
+      box-shadow: 0 12px 30px rgba(45, 138, 138, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 45px rgba(45, 138, 138, 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      color: white;
+    }
+
+    .btn-outline:hover {
+      border-color: white;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Block 2 */
+    .story { background: #101322; }
+
+    .story-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 60px;
+      align-items: center;
+    }
+
+    .story-title {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+
+    .story-text p {
+      font-size: 1.02rem;
+      color: rgba(255, 255, 255, 0.86);
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+
+    .story-highlight {
+      background: linear-gradient(90deg, #2d8a8a, #5eb3d6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .story-points {
+      background: #0a0a0a;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 22px 20px;
+    }
+
+    .story-points h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+
+    .story-points ul { list-style: none; }
+
+    .story-points li {
+      font-size: 0.95rem;
+      color: rgba(209, 213, 219, 0.95);
+      margin-bottom: 8px;
+    }
+
+    /* Block 3 */
+    .values { background: #0a0a0a; }
+
+    .values-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .values-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 40px;
+      letter-spacing: -1px;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-auto-rows: 1fr;
+      gap: 28px;
+    }
+
+    .value-card {
+      background: linear-gradient(135deg, #1a1a2e, #0f1419);
+      border: 1px solid rgba(45, 138, 138, 0.25);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.35s ease;
+    }
+
+    .value-card:hover {
+      border-color: rgba(45, 138, 138, 0.7);
+      box-shadow: 0 18px 50px rgba(45, 138, 138, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .value-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .value-card p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 22px 6vw 26px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Arrow buttons */
+    .arrow-nav {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+
+    .arrow-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(15, 23, 42, 0.9);
+      color: rgba(249, 250, 251, 0.9);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.6);
+      transition: background 0.2s ease, transform 0.2s ease;
+      font-size: 18px;
+    }
+
+    .arrow-btn:hover {
+      background: rgba(37, 99, 235, 0.95);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 900px) {
+      .story-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 4vw; }
+      nav ul { gap: 14px; font-size: 0.8rem; }
+
+      section.block { padding: 80px 4vw; min-height: auto; }
+
+      .hero { padding-top: 80px; }
+      .hero h1 { font-size: 2.1rem; }
+      .hero p  { font-size: 1rem; }
+
+      .values-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .btn { width: 100%; }
+      .arrow-nav { right: 12px; bottom: 12px; }
+    }
+
+    @media (max-width: 540px) {
+      .values-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">StudyNotes</div>
+    <ul>
+      <li><a href="#story">Why We Started</a></li>
+      <li><a onclick="navigateTo('courses.html')">Browse Notes</a></li>
+      <li><a onclick="navigateTo('about.html')">About Us</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- Block 1 -->
+    <section class="block hero" id="top">
+      <div class="hero-inner">
+        <h1>
+          Study <span class="hero-highlight">Smarter</span><br />
+          Not Harder
+        </h1>
+        <p>
+          Clear, focused notes that remove the noise, keep the essentials, and make revision actually manageable.
+        </p>
+        <div class="hero-buttons">
+          <a href="courses.html" onclick="navigateTo('courses.html')" class="btn btn-primary">Browse Notes</a>
+          <a href="about.html" onclick="navigateTo('about.html')" class="btn btn-outline">About Us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 2 -->
+    <section class="block story" id="story">
+      <div class="story-inner">
+        <div class="story-text">
+          <h2 class="story-title">Why this website exists</h2>
+          <p>
+            Most students do not fail because they are lazy; they fail because their material is messy.
+            Different styles, missing chapters, unclear explanations and outdated PDFs make every revision session heavier than it should be.
+          </p>
+          <p>
+            StudyNotes started from that frustration. The idea was simple:
+            <span class="story-highlight">if one student has already written clean, chapter-wise notes that work, there is no reason others should start from zero.</span>
+          </p>
+          <p>
+            Every subject is broken into chapters, every chapter is rewritten for clarity, and every page is treated as something you should be able to read at 2 AM before an exam and still understand.
+          </p>
+        </div>
+        <div class="story-points">
+          <h3>What we focus on</h3>
+          <ul>
+            <li>Removing duplicate, confusing, or low-value content.</li>
+            <li>Keeping examples that actually reflect exam patterns and common tricks.</li>
+            <li>Making each chapter self-contained so you are never hunting through five files to finish one topic.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Block 3 -->
+    <section class="block values" id="values">
+      <div class="values-inner">
+        <h2 class="values-title">What you get with StudyNotes</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <h3>Chapter-wise navigation</h3>
+            <p>You pick a subject, then a chapter, and everything you need for that topic is in one place.</p>
+          </div>
+          <div class="value-card">
+            <h3>Concept-first explanations</h3>
+            <p>Ideas are built step by step, so formulas feel like consequences, not random lines to memorise.</p>
+          </div>
+          <div class="value-card">
+            <h3>Exam-centred selection</h3>
+            <p>Common patterns, typical question types, and high-weight concepts are prioritised over rare edge cases.</p>
+          </div>
+          <div class="value-card">
+            <h3>Readable formatting</h3>
+            <p>Headings, spacing, and flow are tuned so you can skim quickly and still catch the important points.</p>
+          </div>
+          <div class="value-card">
+            <h3>Built by students</h3>
+            <p>The notes are written by people who have already taken the same exams and know where confusion usually appears.</p>
+          </div>
+          <div class="value-card">
+            <h3>Affordable access</h3>
+            <p>Material is priced per chapter or subject so you only pay for what you actually need right now.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Arrow navigation -->
+  <div class="arrow-nav">
+    <button class="arrow-btn" id="arrow-up">&#9650;</button>
+    <button class="arrow-btn" id="arrow-down">&#9660;</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 StudyNotes. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Page transition function
+    function navigateTo(url) {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 400);
+    }
+
+    // Fade-in on scroll
+    const blocks = document.querySelectorAll('section.block');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    blocks.forEach(b => observer.observe(b));
+
+    const orderedBlocks = Array.from(blocks);
+
+    function smoothScrollTo(targetY, duration) {
+      const startY = window.scrollY;
+      const distance = targetY - startY;
+      const startTime = performance.now();
+      const total = duration;
+
+      function easeInOutQuad(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+
+      function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / total, 1);
+        const eased = easeInOutQuad(progress);
+        window.scrollTo(0, startY + distance * eased);
+
+        if (elapsed < total) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    function scrollToBlockIdx(idx) {
+      if (idx < 0 || idx >= orderedBlocks.length) return;
+      const rect = orderedBlocks[idx].getBoundingClientRect();
+      const targetY = rect.top + window.scrollY - 60;
+      smoothScrollTo(targetY, 2000);
+    }
+
+    function currentBlockIndex() {
+      let bestIndex = 0;
+      let bestDistance = Infinity;
+      const viewportCenter = window.scrollY + window.innerHeight / 2;
+      orderedBlocks.forEach((block, i) => {
+        const rect = block.getBoundingClientRect();
+        const blockCenter = rect.top + window.scrollY + rect.height / 2;
+        const distance = Math.abs(blockCenter - viewportCenter);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestIndex = i;
+        }
+      });
+      return bestIndex;
+    }
+
+    // Arrow buttons
+    document.getElementById('arrow-up').addEventListener('click', () => {
+      const idx = currentBlockIndex();
+      scrollToBlockIdx(idx - 1);
+    });
+
+    document.getElementById('arrow-down').addEventListener('click', () => {
+      const idx = currentBlockIndex();
+      scrollToBlockIdx(idx + 1);
+    });
+
+    // Auto-snap
+    let scrollTimeout;
+    window.addEventListener('wheel', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const idx = currentBlockIndex();
+        const rect = orderedBlocks[idx].getBoundingClientRect();
+        const targetY = rect.top + window.scrollY - 60;
+        smoothScrollTo(targetY, 2000);
+      }, 150);
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const idx = currentBlockIndex();
+        const rect = orderedBlocks[idx].getBoundingClientRect();
+        const targetY = rect.top + window.scrollY - 60;
+        smoothScrollTo(targetY, 2000);
+      }, 200);
+    }, { passive: true });
+  </script>
+</body>
+</html>
